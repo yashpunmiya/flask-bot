@@ -1,8 +1,6 @@
 import os
 from flask import Flask, render_template, request
 import google.generativeai as genai
-import requests
-
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -17,7 +15,6 @@ generation_config = {
     "top_k": 1,
     "max_output_tokens": 2048,
 }
-
 
 @app.route('/', methods=['GET', 'POST'])
 def chat_gemini():
@@ -35,13 +32,12 @@ def chat_gemini():
             # Updated context for a general AI chatbot
             context = f"You are a helpful AI assistant. Respond to the following query: {user_input}"
             
+            # Get the response from Gemini
             response = model.generate_content(context)
-            response_text = response.text
+            response_text = response.text if response else "No response generated."
 
     return render_template('chat_bot.html', response=response_text)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))  # Use the PORT environment variable or default to 5000
     app.run(host='0.0.0.0', port=port)
-if __name__ == "__main__":
-    app.run(debug=True)
